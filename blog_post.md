@@ -81,14 +81,14 @@ function search_file_in_a_dir()
 - Parameters such as  are passed to functions as positional arguments
 ```
 
-**How to run the bash script as a command**: (refer README here)
+**How to run the bash script as a command**: 
 
 ```bash
 % search_file -d ./dir_to_search -f "*partial_file_to_search*"
 % search_file -f "some_partial_file_name*" # OR search_file -f "full_file_name"
 ```
 
-For **full recipe details** and bash outputs, refer here
+For **full recipe details** and bash outputs, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/tree/main/search#1-search-file)
 
 ---
 
@@ -140,7 +140,7 @@ function main_function()
 - While you can use "*" in `search_file` but not here `search_file_with_regex`
 ```
 
-**How to run the bash script as a command**: (refer README here)
+**How to run the bash script as a command**: 
 
 ```bash
 # if you know the source directory where to search
@@ -149,7 +149,7 @@ function main_function()
 % search_file_with_regex -rf "some_regex_pattern" 
 ```
 
-For **full recipe details** and bash outputs, refer here
+For **full recipe details** and bash outputs, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/tree/main/search#2-search-file-with-regex-pattern)
 
 ---
 
@@ -175,7 +175,7 @@ function search_a_string()
 - `grep -E` allows "Extended" Regex patterns as input 
 ```
 
-**How to run the bash script as a command**: (refer README here)
+**How to run the bash script as a command**: 
 
 ```bash
 # do note, it need not be just regex_pattern search, even a normal word as is will also be fetched
@@ -186,7 +186,7 @@ function search_a_string()
 # search_string -d "/some/dir" -f "*.sh" -s "[a-z_]+\(\)"
 ```
 
-For **full recipe details** and bash outputs, refer here
+For **full recipe details** and bash outputs, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/tree/main/search#3-search-a-string)
 
 <hr>
 
@@ -220,7 +220,7 @@ function search_n_replace_the_string()
 % search_n_replace_strings -f filename -s search_string -r replacement_string
 ```
 
-For **full recipe details** and bash outputs, refer here
+For **full recipe details** and bash outputs, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/tree/main/search#4-search-and-replace-string)
 
 ---
 
@@ -296,7 +296,7 @@ function join_files()
 	- `split` and `cat`
 ```
 
-**How to run the bash script as a command**: (refer here)
+**How to run the bash script as a command**:
 
 ```bash
 # inside the recipe, there will be a if clause to direct to the right function
@@ -305,7 +305,7 @@ function join_files()
 # You can also add any number of other file operations that you want to club with `manage_files`
 ```
 
-For **full recipe details**, refer here
+For **full recipe details**, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/blob/main/manage_files/manage_files.bash)
 
 ---
 ### II.4. Inside CSV
@@ -363,7 +363,7 @@ function filter_a_numeric_column()
 - `awk` uses column_number as input. We infer column_number from column_name using `sed`, `nl` and `grep`
 ```
 
-**How to run the bash script as a command**: (refer README here)
+**How to run the bash script as a command**: 
 
 ```bash
 # inside the recipe, there will be a if clause to direct to the right function
@@ -372,8 +372,7 @@ function filter_a_numeric_column()
 # You can also add any number of other file operations that you want to club with `manage_files`
 ```
 
-For **full recipe details**, refer here
-
+For **full recipe details**, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/blob/main/inside_csv/inside_csv.bash)
 
 
 ----
@@ -381,7 +380,7 @@ For **full recipe details**, refer here
 ### BONUS
 
 BONUS: Coder-specific Recipes that I use regularly (not discussed in depth; just for you to use !)
-1. `manage_multiple_aws_accounts`  | link
+1. `manage_multiple_aws_accounts`  | [link](https://github.com/senthilkumarm1901/bash_script_recipes/tree/main/manage_multiple_aws_accounts)
 	- If you are a DevOps personnel, you may be interested in a fully AWS CLI solution | [link](https://medium.com/@pushkarjoshi0410/how-to-set-up-aws-cli-with-aws-single-sign-on-sso-acf4dd88e056) 
 2. `search_python_environments` | link | WIP
 3. `manage_docker` | link | WIP
