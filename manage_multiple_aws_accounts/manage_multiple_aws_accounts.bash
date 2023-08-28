@@ -7,24 +7,26 @@
 
 function recieve_and_verify_clipboard_contents
 {
-    clipboard_content=$(pbpaste)
-    verify=$(echo $clipboard_content | head -n 2 | tail -n 1 | grep "aws_access_key_id")
-    if [ -z $verify]; then
+    pbpaste > ~/.aws/credentials
+    verify=$(cat ~/.aws/credentials | head -n 2 | tail -n 1 | grep "aws_access_key_id")
+    if [[ -z $verify ]] ; then
         echo "Your content below in Clipboard are not valid. \
             Please copy the correct short term credentials"
         echo $clipboard_content
     fi
-    echo $clipboard_content > ~/.aws/credentials
 }
 
 function create_aws_environment_variables()
 {
-    export REGION=$1
+    REGION=$1
     # typically AWS_PROFILE is a combination like below
     # <AWS_ACCOUNT_ID>_<IAM_ROLE> 
-    export AWS_PROFILE=$(cat ~/.aws/credentials | head -n 1 | cut -c 2- | rev | cut -c 2- | rev)
-    export AWS_ACCOUNT_ID=$(echo "$AWS_PROFILE" | cut -d'-' -f1)
+    AWS_PROFILE=$(cat ~/.aws/credentials | head -n 1 | cut -c 2- | rev | cut -c 2- | rev)
+    echo "AWS PROFILE: $AWS_PROFILE" 
+    AWS_ACCOUNT_ID=$(echo $AWS_PROFILE | awk -F'_' '{print $1}')
     aws configure set region $REGION --profile $AWS_PROFILE
+    echo -n "Logging into the AWS ACCOUNT:"
+    echo $AWS_ACCOUNT_ID
 }
 
 if [[ $# -gt 0 ]]; then
@@ -39,5 +41,8 @@ if [[ $# -gt 0 ]]; then
     esac
 fi
 
-
+recieve_and_verify_clipboard_contents && echo "Copied Credentials successfully"
 create_aws_environment_variables $region_name
+
+echo -n "You have chosen Region:"
+echo $region_name
