@@ -1,11 +1,11 @@
 # Bash Script Recipes - One of Your Secret Sauces to Improved Productivity
 
-Bash Scripting can improve the productivity of a gamut of professionals not just techies like DevOps, SysAdmin, Networking, ML or Cloud Engineers. It can aid product owners, scrum masters, HR professionals and even time-crunched CXOs to do their repetitive tasks faster. 
+Bash Scripting can improve the productivity of a gamut of professionals not just DevOps, SysAdmin, Networking, ML or Cloud Engineers. It can aid product owners, scrum masters, HR professionals and even time-crunched CXOs to do their repetitive tasks faster. 
 
 Table of Contents
 - I. Introduction
-- II. Bash Recipes
-- III. NL2Bash
+- II. Bash Script Recipes (main topic)
+- III. NL2Bash using LLMs
 - IV. Concluding Remarks
 ## I.Introduction
 
@@ -18,12 +18,15 @@ Everyone of us deals with files and directories. We search/move/delete/copy file
 
 ### I.C.  What is in it for you 
 The bash script recipes discussed here are intended for 2 purposes. The reader can
-1. directly use the recipes in their day-to-day work (like a mini cookbook)
-2. learn the fundamentals to create their own recipes 
+1. directly use the recipes in their day-to-day work (like a mini cookbook), or 
+2. use the recipes to learn the fundamentals and create their own recipes 
 
 ### I.D. Prerequisites
-- Please overcome reluctance to use terminal, if any (I had to!)
-- Some really basic bash scripting knowledge (like what is Bash and what is a linux kernel. Refer [here](https://senthilkumarm1901.quarto.pub/learn-by-blogging/posts/2023-08-03-I-Shell-Scripting.html#ii.-a-brief-intro-to-bash-scripting) if interested)
+- Understanding of what is Bash and what is a linux kernel which the Bash interacts with. Refer [here](https://homepages.uc.edu/~thomam/Intro_Unix_Text/Images/OS_donut.png) and [here](https://homepages.uc.edu/~thomam/Intro_Unix_Text/OS_Organization.html)  if interested)
+- Not mandatory, but other helpful pre-reading material: 
+	- Google's Shell Scripting Style guide: [When to use a Shell Script](https://google.github.io/styleguide/shellguide.html#when-to-use-shell) | [how to write function and comments](https://google.github.io/styleguide/shellguide.html#function-comments)
+	- [Which Shell to use](https://www.hexnode.com/blogs/the-ultimate-guide-to-mac-shell-scripting/#:~:text=Mac's%20default%20shell%20is%20either,the%20default%20shell%20is%20zsh.)
+	
 
 ---
 
@@ -159,7 +162,7 @@ For **full recipe details** and bash outputs, refer here
 ```bash
 function search_a_string()
 {
-    find "$1" -type f -name "*" -exec grep -H -n -E "$2" -o {} \;
+    find "$1" -type f -name "$2" -exec grep -H -n -E "$3" -o {} \;
 }
 ```
 
@@ -176,9 +179,11 @@ function search_a_string()
 
 ```bash
 # do note, it need not be just regex_pattern search, even a normal word as is will also be fetched
-% search_string -d dir_name -f file_name -rs regex_search_string
+% search_string -d dir_name -f file_name -s regex_search_string
 # if you do not know directory or type of file, you can simply do the below search string itself
-% search_string -rs regex_search_string
+% search_string -s regex_search_string
+# example
+# search_string -d "/some/dir" -f "*.sh" -s "[a-z_]+\(\)"
 ```
 
 For **full recipe details** and bash outputs, refer here
@@ -191,63 +196,35 @@ For **full recipe details** and bash outputs, refer here
 **Core Function**:
 
 ```bash
-function search_a_string()
-{
-	find "$1" -type f -name "$2" -exec grep -H -E "$3" -o {} \;
-}
-
-function isolate_file_name_and_string()
-{
-	file_name_with_path=$(echo "$1" | cut -d':' -f1) 
-	escaped_file_name_with_path=$(printf '%q' "$file_name_with_path")
-	string_to_match=$(echo "$1" | cut -d':' -f2)
-	result=("$escaped_file_name_with_path" "$string_to_match")
-}
-
-function replace_the_string()
+function search_n_replace_the_string()
 {
 	search_string="$1"
 	replacement_string="$2"
-	file_path="$3"
-	sed -i '' 's|${search_string}|${replacement_string}|g' $file_path
-}
-
-function main_function()
-{
-	dir_name="$1"
-	file_name="$2"
-	search_pattern="$3"
-	replacement_string="$4"
-	
-	result1=$(search_a_string $dir_name $file_name $search_pattern)
-	result2=$(isolate_file_name_and_string $result1)
-	file_path="${result2[1]}"
-	search_string="${result2[2]}"
-	replace_the_string $search_string $replacement_string $file_path
+	full_file_path="$3"
+    echo "$search_string" 
+    echo "$replacement_string"
+	sed -i'.original' -e "s|$search_string|$replacement_string|g" $full_file_path
 }
 ```
 
 **Learnings**:
 
 ```md
-- Note the use of two `-exec` commands and 2 curly brackers ( {} ) to use the output from previous stage and pass as input to next command
-- `sed -i ''`` command replaces the file in-place and leaves no backup. If you want a backup, you could give something like this `sed -i '.backup'`
+- `sed -i ''`` command replaces the file in-place and leaves no backup. If you want a backup, you could give something like this `sed -i '.backup' to retrieve the original file later`
 ```
 
-**How to run the bash script as a command**: (refer README here)
+**How to run the bash script as a command**: (refer here)
 
 ```bash
-# do note, it need not be just regex_pattern search, even a normal word as is will also be fetched
-% search_n_replace_strings -d dir_name -f file_name --search_string regex_search_string -replacement_string replacement_string
-# if you do not know directory or type of file, you can simply do the below search string itself
-% search_n_replace_strings --search_string regex_search_string -replacement_string replacement_string
+# if you do not know directory, you can specify the other 3 parameters
+% search_n_replace_strings -f filename -s search_string -r replacement_string
 ```
 
 For **full recipe details** and bash outputs, refer here
 
 ---
 
-### III. Manage files
+### II.3. Manage files
 
 `manage_files`
 
@@ -319,7 +296,7 @@ function join_files()
 	- `split` and `cat`
 ```
 
-**How to run the bash script as a command**: (refer README here)
+**How to run the bash script as a command**: (refer here)
 
 ```bash
 # inside the recipe, there will be a if clause to direct to the right function
@@ -328,10 +305,10 @@ function join_files()
 # You can also add any number of other file operations that you want to club with `manage_files`
 ```
 
-For **full recipe details** and bash outputs, refer here
+For **full recipe details**, refer here
 
 ---
-### II.4 Inside CSV
+### II.4. Inside CSV
 
 
 `inside_csv`
@@ -356,21 +333,23 @@ function display_n_rows_in_a_column()
 
 # the below functions are hard-coded for better understandability
 # can your count the number of rows where gender=="Male"
-function basic_text_conditional_operation()
+function filter_a_text_column()
 {
 	file_name="la-riots.csv"
 	column_name="gender"
+    text_to_filter="Male"
 	specific_column_number=$(head -n 1 $file_name | sed 's|,|\n|g' | nl | grep "$column_name" | grep -E "[0-9]+" -o)
-	num_of_males=$(awk -F',' -v column_number=$specific_column_number '$column_number=="Male" { print }' $file_name | wc -l)
+	num_of_males=$(awk -F',' -v column_number=$specific_column_number '$column_number=="$text_to_filter" { print }' $file_name | wc -l)
 	echo "Number of males: $num_of_males"
 }
 
-function basic_arithmetic_condition()
+function filter_a_numeric_column()
 {
 	file_name="la-riots.csv"
 	column_name="age"
+    numeric_column_condition=">= 18"
 	specific_column_number=$(head -n 1 $file_name | sed 's|,|\n|g' | nl | grep "$column_name" | grep -E "[0-9]+" -o)
-	age_gt_18=$(awk -F',' -v column_number=$specific_column_number '$column_number >= 18 { print }' $file_name | wc -l)
+	age_gt_18=$(awk -F',' -v column_number=$specific_column_number '$column_number $numeric_column_condition { print }' $file_name | wc -l)
 	echo "Num of ppl greater than or equal to 18: $age_gt_18"
 }
 
@@ -393,7 +372,7 @@ function basic_arithmetic_condition()
 # You can also add any number of other file operations that you want to club with `manage_files`
 ```
 
-For **full recipe details** and bash outputs, refer here
+For **full recipe details**, refer here
 
 
 
@@ -403,22 +382,24 @@ For **full recipe details** and bash outputs, refer here
 
 BONUS: Coder-specific Recipes that I use regularly (not discussed in depth; just for you to use !)
 1. `manage_multiple_aws_accounts`  | link
-2. `search_python_environments` | link
-3. `manage_docker` | link
+	- If you are a DevOps personnel, you may be interested in a fully AWS CLI solution | [link](https://medium.com/@pushkarjoshi0410/how-to-set-up-aws-cli-with-aws-single-sign-on-sso-acf4dd88e056) 
+2. `search_python_environments` | link | WIP
+3. `manage_docker` | link | WIP
 
 ---
 
-## III. Natural Language 2 Bash (NL2Bash) using LLMs, an interesting frontier ...
+## III. Natural Language 2 Bash (NL2Bash) using LLMs ...
 
 
+
+NL2Bash can be done both via Paid and Free LLMs. 
 1. If you are not constrained by budget, a paid Large Language Model based option is possible for productional use. Do explore  [AI-Shell](https://github.com/BuilderIO/ai-shell) and [Yolo](https://github.com/wunderwuzzi23/yolo-ai-cmdbot/tree/main) , powered by ChatGPT. 
-2. If you want a fully local and free* version, then a Fine-tuning a OpenSource LLM could also be possible. In fact, we could build restricted Bash scope (so that not anything and everything is allowed to be executed)
-\*nothing is free; Fine-tuning a opensource LLM locally needs compute resources
+2. If you want a fully local and free version, there is the repo [Ollama](https://github.com/jmorganca/ollama) for Mac OS, which simplifies running llama2 locally. 
 
 If you have a server and there is a solid case for giving users/developers a Natural Language way of accessing information, the NL2Bash is a really good option.  
-In fact, in the same API, NL2Py or NL2SQL can also be implemented. For the user, it is is just NL that they interact with.
+In fact, in the same API, NL2Py or NL2SQL can also be implemented to interact with your application.
 
-This space is truly exciting. However, if you are not going to run too varied a list of bash commands, then a NL option is still like a bulldozer to mow a lawn. You are better off mowing the old-fashioned way with custom Bash recipes like above which leave no memory footprint and are blazing fast. 
+NL2bash is truly exciting. However, if you won't be running an extensively varied list of bash commands, then using an NL option is akin to using a bulldozer to mow a lawn. You'd be better off mowing the old-fashioned way with custom Bash recipes like the ones mentioned above, which leave no memory footprint and execute exceptionally swiftly. 
 
 ---
 
@@ -433,14 +414,17 @@ function a_specific_function()
 }
 ```
 
-Arguable opinion: bash scripting is meant for implementation the above way. 
-It is NOT a replacement for Python or Rust or even a [Taskfile](https://taskfile.dev/). But in combination with your core programming language, they are really powerful. 
+
+Bash scripting is meant for implementation the above way. (refer [Google's Bash Scripting Style Guide](https://google.github.io/styleguide/shellguide.html#when-to-use-shell) )
+It is NOT a replacement for Python or Rust or even a [Taskfile](https://taskfile.dev/). Neither are the languages a replacement for Bash. But in combination with your core programming language, they are really powerful. 
 
 If I take some technical liberty, you did not execute bash scripting when you used `find` , `grep`, `sed` and `awk`, you actually leveraged really efficiently written C codes (source). 
 
+While we used the fancy LLMs, it is just bells and whistles of this blog post. The core section is on how to write Bash Scripts for daily use. 
+
 Bash scripting is foundational to Software Engineering and more pervasive than you think. If you have used `git`, `docker`, `kubectl` or even just `mkdir & cd`, you have tip-toed into bash scripting. 
 
-Unequivocally, it is a good skill in your toolbox. 
+Unequivocally, it is a great skill in your toolbox. 
 Happy Bash Scripting !
 
 ---
