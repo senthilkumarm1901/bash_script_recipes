@@ -1,9 +1,9 @@
 ### Add the `manage_multiple_aws_accounts.bash` to path and make it executable as `manage_multiple_aws_accounts` anywhere
 
 ```bash
-bash_script_recipes/manage_multiple_aws_accounts % path_to_script="$PWD/manage_multiple_aws_accounts.bash"
-bash_script_recipes/manage_multiple_aws_accounts % phrase_command_to_access_it_in_terminal="manage_multiple_aws_accounts"
-bash_script_recipes/manage_multiple_aws_accounts % bash $(dirname $PWD)/add_a_bash_script_to_bashrc.bash $path_to_script $phrase_command_to_access_it_in_terminal && source ~/.zshrc  && exec $SHELL 
+bash_script_recipes/aws_recipes % path_to_script="$PWD/manage_multiple_aws_accounts.bash"
+bash_script_recipes/aws_recipes % phrase_command_to_access_it_in_terminal="manage_multiple_aws_accounts"
+bash_script_recipes/aws_recipes % bash $(dirname $PWD)/add_a_bash_script_to_bashrc.bash $path_to_script $phrase_command_to_access_it_in_terminal && source ~/.zshrc  && exec $SHELL 
 ```
 
 ### Run the script
