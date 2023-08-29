@@ -18,12 +18,12 @@ function recieve_and_verify_clipboard_contents
 
 function create_aws_environment_variables()
 {
-    REGION=$1
+    export REGION=$1
     # typically AWS_PROFILE is a combination like below
     # <AWS_ACCOUNT_ID>_<IAM_ROLE> 
-    AWS_PROFILE=$(cat ~/.aws/credentials | head -n 1 | cut -c 2- | rev | cut -c 2- | rev)
+    export AWS_PROFILE=$(cat ~/.aws/credentials | head -n 1 | cut -c 2- | rev | cut -c 2- | rev)
     echo "AWS PROFILE: $AWS_PROFILE" 
-    AWS_ACCOUNT_ID=$(echo $AWS_PROFILE | awk -F'_' '{print $1}')
+    export AWS_ACCOUNT_ID=$(echo $AWS_PROFILE | awk -F'_' '{print $1}')
     aws configure set region $REGION --profile $AWS_PROFILE
     echo -n "Logging into the AWS ACCOUNT:"
     echo $AWS_ACCOUNT_ID
@@ -40,9 +40,3 @@ if [[ $# -gt 0 ]]; then
             ;;
     esac
 fi
-
-recieve_and_verify_clipboard_contents && echo "Copied Credentials successfully"
-create_aws_environment_variables $region_name
-
-echo -n "You have chosen Region:"
-echo $region_name

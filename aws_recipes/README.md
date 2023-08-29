@@ -1,12 +1,35 @@
-### Add the `manage_multiple_aws_accounts.bash` to path and make it executable as `manage_multiple_aws_accounts` anywhere
+- The methodology to make `manage_multiple_aws_accounts` work anywhere in terminal is slightly different than the rest of the functions
+- This because every time a shell script is run, it makes a copy of current shell and kills that shell onces the shell script is executed.
+- But we want the environment variables to persist in our current shell window
+- Hence add the below bash function to `~/.zshrc`. 
 
 ```bash
-bash_script_recipes/aws_recipes % path_to_script="$PWD/manage_multiple_aws_accounts.bash"
-bash_script_recipes/aws_recipes % phrase_command_to_access_it_in_terminal="manage_multiple_aws_accounts"
-bash_script_recipes/aws_recipes % bash $(dirname $PWD)/add_a_bash_script_to_bashrc.bash $path_to_script $phrase_command_to_access_it_in_terminal && source ~/.zshrc  && exec $SHELL 
+manage_multiple_aws_accounts()
+{
+    source /Users/senthilkumar.m/my_learnings/bash_script_recipes/aws_recipes/manage_multiple_aws_accounts.bash
+    recieve_and_verify_clipboard_contents 
+    if [[ $# -gt 0 ]]; then
+        case "$1" in
+            --region)
+                region_name=$2       
+                ;;         
+            *)
+                echo "Unknown option: $1"
+                exit 1
+                ;;
+        esac
+    fi
+    create_aws_environment_variables $region_name
+    echo -n "You have chosen Region:"
+    echo $region_name
+}
 ```
 
-### Run the script
+- This function `manage_multiple_aws_accounts` is sourced in every new terminal. It executes the commands in `create_aws_environment_variables` in every terminal and hence persisting the environment variables like `REGION`, `AWS_PROFILE`, `AWS_ACCOUNT_ID` in `manage_multiple_aws_accounts.bash` in your current terminal
+
+
+
+### Run the script (this is as usual)
 
 ```bash
 # keep the AWS Credentials copied 
