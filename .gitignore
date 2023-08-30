@@ -1,1 +1,2 @@
 aws_recipes/create_and_connect_to_ec2_instance/*.json
+create_and_connect_to_ec2_instance/*.pem

@@ -1,0 +1,139 @@
+version: '3'
+
+env:
+  aws_region: ap-south-1
+  ec2_key_name: 
+    sh: echo "${USER}_EC2_KEY_PAIR"
+  ec2_key_pair_file_name: 
+    sh: echo "${USER}Ec2KeyPair.pem"
+  my_ip_address:
+    sh: curl -s ipinfo.io/ip
+    # your-public-ip-address can also be obtained from `https://whatismyipaddress.com/`
+  sec_group_name:
+    sh: echo "${USER}_EC2_sec_group"
+
+dotenv: ['.env_for_vpc_and_public_subnet_id']
+
+tasks:
+  paste_credentials_from_copied_clipboard:
+    cmds:
+      - pbpaste > ~/.aws/credentials
+    silent: false
+  
+  set_up_credentials:
+    cmds:
+      - export AWS_PROFILE=$(cat ~/.aws/credentials | head -n 1 | cut -c 2- | rev | cut -c 2- | rev)
+      - export AWS_ACCOUNT_ID=$(echo $AWS_PROFILE | awk -F'_' '{print $1}')
+      - aws configure set region $REGION --profile $AWS_PROFILE
+    silent: false
+  
+  1A.generate_ec2_key_pair:
+    cmds:
+      - aws ec2 create-key-pair --key-name $ec2_key_name --query 'KeyMaterial' --output text > $ec2_key_pair_file_name
+      - # just read permission for User is enough 
+      - chmod 400 $ec2_key_pair_file_name
+    silent: false
+  
+  1B.use_created_ec2_key_pair:
+    cmds:
+      - aws ec2 describe-key-pairs --key-name $ec2_key_name
+    silent: false
+
+  2.create_sec_group_for_ec2:
+    cmds:
+      - echo "The vpc_id fetched from .env_for_vpc_and_public_subnet_id is $vpc_id"
+      - # vpc is expected to have a public subnet
+      - aws ec2 create-security-group --vpc-id $vpc_id --group-name $sec_group_name --description "EC2 instance sec group" > create-security-group.json
+    silent: false
+  
+  3A.allow_ssh_port_access_in_sg:
+    env:
+      sec_group_id:
+        sh: cat create-security-group.json | jp -u 'GroupId'
+    cmds:
+      - # ipconfig getifaddr en0 # this gives local private ip address
+      - # https://www.whatismyip.com/why-does-wimi-show-a-different-ip-address-than-ipconfig/
+      - aws ec2 authorize-security-group-ingress --group-id $sec_group_id --protocol tcp --port 22 --cidr ${my_ip_address}/32 --output text
+    silent: false
+  
+  3B.allow_public_subnet_to_auto_assign_ipv4_address:
+    cmds:
+      - # the $public_subnet_id is obtained from .env_for_vpc_and_public_subnet_id file
+      - aws ec2 modify-subnet-attribute --subnet-id $public_subnet_id --map-public-ip-on-launch
+    silent: false
+
+  optional_fetch_ami_instances:
+    cmds:
+      - aws ec2 describe-images --owners self amazon > amis_in_this_region.json
+      - aws ec2 describe-instance-types --output json > instance-types.json
+      - # the above command helps in identifying the right image ami_id for your need
+    silent: false
+
+  4.create_ec2_instance:
+    env:
+      AMI_ID: ami-0ecbbce1ad787aa0a
+      INSTANCE_TYPE: g4dn.xlarge
+      sec_group_id:
+        sh: cat create-security-group.json | jp -u 'GroupId'
+    cmds:
+      - # the above image_id is a `amazon/Deep Learning AMI GPU PyTorch 1.12.1 (Ubuntu 20.04) 20221108`
+      - aws ec2 run-instances --image-id $AMI_ID --count 1 --instance-type $INSTANCE_TYPE --security-group-ids $sec_group_id --subnet-id $public_subnet_id --key-name $ec2_key_name > pytorch_ubuntu_instance.json
+    silent: false
+  
+  5.running_ec2_instance_details:
+    env:
+      ec2_instance_id:
+        sh: jp -f pytorch_ubuntu_instance.json -u 'Instances[0].InstanceId'
+    cmds:
+    - aws ec2 describe-instances --instance-ids $ec2_instance_id > describe_instances.json
+    silent: false
+
+  6.ssh_into_the_ec2_instance:
+    env:
+      ec2_instance_id:
+        sh: jp -f pytorch_ubuntu_instance.json -u 'Instances[0].InstanceId'
+      public_ip_address:
+        sh: jp -f describe_instances.json -u 'Reservations[0].Instances[0].PublicIpAddress'
+    cmds:
+      - ssh -i $ec2_key_pair_file_name ubuntu@$public_ip_address
+    silent: false
+
+  7A.stop_ec2_instance:
+    env: 
+      ec2_instance_id:
+        sh: jp -f pytorch_ubuntu_instance.json -u 'Instances[0].InstanceId'
+    cmds:
+     - aws ec2 stop-instances --instance-ids $ec2_instance_id
+    silent: false
+
+  7B.start_ec2_instance:
+    env: 
+      ec2_instance_id:
+        sh: jp -f pytorch_ubuntu_instance.json -u 'Instances[0].InstanceId'
+    cmds:
+     - aws ec2 start-instances --instance-ids $ec2_instance_id
+    silent: false     
+
+  7C.terminate_ec2_instance:
+    env: 
+      ec2_instance_id:
+        sh: jp -f pytorch_ubuntu_instance.json -u 'Instances[0].InstanceId'
+    cmds:
+     - aws ec2 terminate-instances --instance-ids $ec2_instance_id
+    silent: false    
+
+  8.clean_up_all:
+    env:
+      sec_group_id:
+        sh: cat create-security-group.json | jp -u 'GroupId'
+      ec2_instance_id:
+        sh: jp -f pytorch_ubuntu_instance.json -u 'Instances[0].InstanceId'
+    cmds:
+      - # aws ec2 terminate-instances --instance-ids $ec2_instance_id
+      - aws ec2 delete-security-group --group-id $sec_group_id
+      - aws ec2 modify-subnet-attribute --subnet-id $public_subnet_id --no-map-public-ip-on-launch
+    silent: false
+
+
+
+  
