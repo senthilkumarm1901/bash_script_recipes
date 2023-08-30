@@ -83,10 +83,9 @@ function search_file_in_a_dir()
 
 **Learnings**:
 
-```md
 - `find` allows to search for a file recursively under every dir in a specific dir 
 - Parameters such as  are passed to functions as positional arguments
-```
+
 
 **How to run the bash script as a command**: 
 
@@ -177,12 +176,11 @@ function search_a_string()
 
 **Learnings**:
 
-```md
 - Do note the use of `-exec` which will direct grep to search inside every matching file from `find`
 - `grep -n` gives out number of line that matches
 - `grep -o` outputs the matched string
 - `grep -E` allows "Extended" Regex patterns as input 
-```
+
 
 **How to run the bash script as a command**: 
 
@@ -221,9 +219,9 @@ function search_n_replace_the_string()
 
 **Learnings**:
 
-```md
-- `sed -i ''`` command replaces the file in-place and leaves no backup. If you want a backup, you could give something like this `sed -i '.backup' to retrieve the original file later`
-```
+- `sed -i ''` command replaces the file in-place and leaves no backup. 
+- If you want a backup, you could give something like this `sed -i '.backup'` to retrieve the original file later
+
 
 **How to run the bash script as a command**: (refer here)
 
@@ -300,13 +298,12 @@ function join_files()
 
 **Learnings**:
 
-```md
 - The commands we have covered here include 
 	- a combination of list dir command `ls`, `grep "^d"` (anything but a directory) and word count by line `wc -l`
 	- backup based on time using `date` and `cp`
 	- conditions like `[ -d $file_or_dir]`  to detect if the value is a directory
 	- `split` and `cat`
-```
+
 
 **How to run the bash script as a command**:
 
@@ -370,10 +367,9 @@ function filter_a_numeric_column()
 
 **Learnings**:
 
-```md
 - We have used primarily `awk` to parse inside files
 - `awk` uses column_number as input. We infer column_number from column_name using `sed`, `nl` and `grep`
-```
+
 
 **How to run the bash script as a command**: 
 
