@@ -1,6 +1,6 @@
 Bash Scripting can improve the productivity of a gamut of professionals not just DevOps, SysAdmin, Networking, ML or Cloud Engineers. It can aid product owners, scrum masters, HR professionals and even time-crunched CXOs to do their repetitive tasks faster. 
 
-![](./images/example_shell_script.png)
+![](images/example_shell_script.png)
 
 Table of Contents
 - I. Introduction
@@ -69,7 +69,7 @@ curl https://github.com/altair-viz/vega_datasets/blob/master/vega_datasets/_data
 
 `search_file`
 
-![](./images/1_search_file.png)
+![](images/1_search_file.png)
 
 
 **Core Function** in the bash script `search_file.bash`
@@ -102,7 +102,7 @@ For **full recipe details** and bash outputs, refer [here](https://github.com/se
 
 `search_file_with_regex`
 
-![](./images/2_search_file_with_regex.png)
+![](images/2_search_file_with_regex.png)
 
 
 **Core Functions** in the bash script `search_file_with_regex.bash`
@@ -164,7 +164,7 @@ For **full recipe details** and bash outputs, refer [here](https://github.com/se
 
 `search_string`
 
-![](./images/3_search_string.png)
+![](images/3_search_string.png)
 
 **Core Function**
 
@@ -202,7 +202,7 @@ For **full recipe details** and bash outputs, refer [here](https://github.com/se
 ``
 `search_n_replace_strings`
 
-![](./images/4_search_and_replace_string.png)
+![](images/4_search_and_replace_string.png)
 
 
 **Core Function**:
@@ -477,7 +477,7 @@ There are two sample AWS recipes created from scratch using AWS CLI and some bas
 	- This is a Taskfile.yml. But in essence, you are executing individual bash commands
 	- Taskfile is so intuitively good. Check it out [here](https://taskfile.dev/usage/). 
 
-![](./images/Taskfile_for_ec2.png)
+![](images/Taskfile_for_ec2.png)
 
 2. From scratch, how to `create_a_vpc_with_private_subnet_and_nat.bash` | [link](https://github.com/senthilkumarm1901/bash_script_recipes/blob/main/aws_recipes/create_vpc_sg_privatesub_NAT.bash)
 
