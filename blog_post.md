@@ -140,7 +140,7 @@ function main_function()
 
 - Note the piping ( | ) in the main function `search_regex_file_in_a_dir` 
 - There may be space in a file path. E.g.: "/path/to/an amazing dir/a file name.csv"
-- `sed` (streaming editor) is introduced here to `find_and_replace` `a space` as we we are parsing the output of `find` which could have space
+- `sed` (streaming editor) is introduced here to `find_and_replace` `a space` as we are parsing the output of `find` which could have space
 - `3_isolate_file_name` function isolates the filename in the end by the dir separator "/" 
 - `grep -E` allows for execution of regex filtering on the previous output we have piped
 - In a regex search, [ . * ( ) ] + are metacharacters. If you need to match them as is, escape with a backslash. E.g.: "[0-9]+_[a-z]+\.sh" will match a file_name like "02_some_file_name.sh"
