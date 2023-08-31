@@ -44,7 +44,7 @@ Generic Recipes for everyone
 5. AWS Recipes 
 
 Each of the recipe has the following details:
-- Core Function(s)
+- Core Function
 - Learnings
 - How to run it as a bash command
 
@@ -197,7 +197,6 @@ For **full recipe details** and bash outputs, refer [here](https://github.com/se
 
 <hr>
 
-``
 `search_n_replace_strings`
 
 ![](images/4_search_and_replace_string.png)
