@@ -1,12 +1,30 @@
+---
+author: Senthil Kumar
+badges: true
+branch: master
+categories:
+- Coding
+- Bash Scripting
+date: '2023-08-16'
+description: The bash script recipes discussed here can be used as-is like a mini-cookbook or for understanding the fundamentals of bash scripting
+image: images/bash_scripting/example_shell_script.png
+output-file: 2023-08-16-II-Shell-Scripting.html
+title: Boost Your Productivity with Bash Script Recipes
+toc: true
+---
 Bash Scripting can improve the productivity of a gamut of professionals not just DevOps, SysAdmin, Networking, ML or Cloud Engineers. It can aid product owners, scrum masters, HR professionals and even time-crunched CXOs to do their repetitive tasks faster. 
 
-![](images/example_shell_script.png)
+![](images/bash_scripting/example_shell_script.png)
 
-Table of Contents
-- I. Introduction
-- II. Bash Script Recipes (main topic)
-- III. NL2Bash using LLMs
-- IV. Concluding Remarks
+Pic source: The image was created by author
+
+**Table of Contents**
+
+I. Introduction <br>
+II. Bash Script Recipes (main topic) <br>
+III. NL2Bash using LLMs <br>
+IV. Concluding Remarks <br>
+
 ## I.Introduction
 
 ### I.A. Why Bash Scripting
@@ -14,7 +32,8 @@ Table of Contents
 Everyone of us deals with files and directories. We search/move/delete/copy files. We look for a particular file or directory. We may even want to search a word/phrase in the files. With Bash, we can do those tasks at scale and at great speed. 
 
 ### I.B.  Why Bash Script Recipes
-- Create your own simplified bash recipes for tasks that you do repetitively. The recipes could string together several bash commands underneath, but you have abstracted them for quick use
+
+Create your own simplified bash recipes for tasks that you do repetitively. The recipes could string together several bash commands underneath, but you have abstracted them for quick use
 
 ### I.C.  What is in it for you 
 The bash script recipes discussed here are intended for 2 purposes. The reader can
@@ -22,10 +41,11 @@ The bash script recipes discussed here are intended for 2 purposes. The reader c
 2. use the recipes to learn the fundamentals and create their own recipes 
 
 ### I.D. Prerequisites
-- Understanding of what is Bash and what is a linux kernel, which the Bash interacts with. Refer [here](https://homepages.uc.edu/~thomam/Intro_Unix_Text/OS_Organization.html) if interested
+- Understanding of what a Bash is, what are the different types of Bash terminals, how Bash and Linux Kernel interactions could be helpful. This important theory is out of the purview of this blog.   
 
-![here](https://homepages.uc.edu/~thomam/Intro_Unix_Text/Images/OS_donut.png)
+![](https://homepages.uc.edu/~thomam/Intro_Unix_Text/Images/OS_donut.png)
 
+Pic Source: Intro to Unix (uc.edu course) | Refer [here](https://homepages.uc.edu/~thomam/Intro_Unix_Text/OS_Organization.html) if interested
 
 - Not mandatory, but other helpful pre-reading material: 
 	- Google's Shell Scripting Style guide: [When to use a Shell Script](https://google.github.io/styleguide/shellguide.html#when-to-use-shell) | [how to write function and comments](https://google.github.io/styleguide/shellguide.html#function-comments)
@@ -35,15 +55,16 @@ The bash script recipes discussed here are intended for 2 purposes. The reader c
 ---
 
 ## II.  The Bash CLI Recipes
-
 Generic Recipes for everyone
-1. `search_file` & `search_file_with_regex`
-2. `search_string_with_regex`  & `search_n_replace_with_string`
-3. `manage_files`
-4. `inside_csv`
-5. AWS Recipes 
 
-Each of the recipe has the following details:
+- `search_file` & `search_file_with_regex`
+- `search_string_with_regex`  & `search_n_replace_with_string`
+- `manage_files`
+- `inside_csv`
+- AWS Recipes 
+
+Each of the recipes has the following details:
+
 - Core Function
 - Learnings
 - How to run it as a bash command
@@ -65,11 +86,12 @@ For section II.4, use [this csv file](https://github.com/altair-viz/vega_dataset
 ```bash
 curl https://github.com/altair-viz/vega_datasets/blob/master/vega_datasets/_data/la-riots.csv >> la-riots.csv
 ```
+
 ### II. 1.  Searching Files
 
-`search_file`
+**Recipe Title: `search_file`**
 
-![](images/1_search_file.png)
+![](images/bash_scripting/1_search_file.png)
 
 
 **Core Function** in the bash script `search_file.bash`
@@ -94,14 +116,13 @@ function search_file_in_a_dir()
 % search_file -f "some_partial_file_name*" # OR search_file -f "full_file_name"
 ```
 
-
 For **full recipe details** and bash outputs, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/tree/main/search#1-search-file)
 
 ---
 
-`search_file_with_regex`
+**Recipe Title: `search_file_with_regex`**
 
-![](images/2_search_file_with_regex.png)
+![](images/bash_scripting/2_search_file_with_regex.png)
 
 
 **Core Functions** in the bash script `search_file_with_regex.bash`
@@ -129,7 +150,10 @@ function 4_run_regex_file_search()
 
 function main_function()
 {
-	1_search_file_in_a_dir $1 | 2_to_treat_space_in_file_path | 3_isolate_the_file_name | 4_run_regex_file_search $2
+	1_search_file_in_a_dir $1 | \
+    2_to_treat_space_in_file_path | \
+    3_isolate_the_file_name | \
+    4_run_regex_file_search $2
 }
 
 # in one line, the above command is 
@@ -161,9 +185,9 @@ For **full recipe details** and bash outputs, refer [here](https://github.com/se
 
 ### II. 2. Searching Strings
 
-`search_string`
+**Recipe Title: `search_string`**
 
-![](images/3_search_string.png)
+![](images/bash_scripting/3_search_string.png)
 
 **Core Function**
 
@@ -176,18 +200,19 @@ function search_a_string()
 
 **Learnings**:
 
-- Do note the use of `-exec` which will direct grep to search inside every matching file from `find`
+- `-exec` which will direct grep to search inside every matching file from `find`
 - `grep -n` gives out number of line that matches
 - `grep -o` outputs the matched string
 - `grep -E` allows "Extended" Regex patterns as input 
 
-
 **How to run the bash script as a command**: 
 
 ```bash
-# do note, it need not be just regex_pattern search, even a normal word as is will also be fetched
+# do note, it need not be just regex_pattern search, 
+# even a normal word as is will also be fetched
 % search_string -d dir_name -f file_name -s regex_search_string
-# if you do not know directory or type of file, you can simply do the below search string itself
+# if you do not know directory or type of file, 
+# you can simply do the below search string itself
 % search_string -s regex_search_string
 # example
 # search_string -d "/some/dir" -f "*.sh" -s "[a-z_]+\(\)"
@@ -197,10 +222,9 @@ For **full recipe details** and bash outputs, refer [here](https://github.com/se
 
 <hr>
 
-`search_n_replace_strings`
+**Recipe Title:`search_n_replace_strings`**
 
-![](images/4_search_and_replace_string.png)
-
+![](images/bash_scripting/4_search_and_replace_string.png)
 
 **Core Function**:
 
@@ -218,9 +242,9 @@ function search_n_replace_the_string()
 
 **Learnings**:
 
-- `sed -i ''` command replaces the file in-place and leaves no backup. 
-- If you want a backup, you could give something like this `sed -i '.backup'` to retrieve the original file later
-
+```md
+- `sed -i ''`` command replaces the file in-place and leaves no backup. If you want a backup, you could give something like this `sed -i '.backup' to retrieve the original file later`
+```
 
 **How to run the bash script as a command**: (refer here)
 
@@ -235,9 +259,11 @@ For **full recipe details** and bash outputs, refer [here](https://github.com/se
 
 ### II.3. Manage files
 
-`manage_files`
+**Recipe Title: `manage_files`**:
 
-Core Functions
+![](images/bash_scripting/5_manage_files.png)
+
+**Core Functions**
 
 ```bash
 # functions below are run as 
@@ -245,17 +271,17 @@ Core Functions
 
 function count_files_inside_dir() 
 {
-       directory="$1"
-       num_files=$(ls -l "$directory" | grep -v "^d" | wc -l)
-       echo "Number of files in $directory: $num_files"
+    directory="$1"
+    num_files=$(ls -l "$directory" | grep -v "^d" | wc -l)
+    echo "Number of files in $directory: $num_files"
 }
 
 function backup_file() 
 {
-   file="$1"
+   file_full_path="$1"
    timestamp=$(date +"%Y%m%d%H%M%S")
-   cp "$file" "$file.$timestamp"
-   echo "Backup created: $file.$timestamp"
+   cp "$file_full_path" "$file_full_path.$timestamp"
+   echo "Backup created: $file_full_path.$timestamp"
 }
 
 function get_size() 
@@ -274,24 +300,38 @@ function get_size()
 
 function split_file_into_n_chunks()
 {
-	num_of_chunks=$1
-	file_to_split=$2
+	num_of_chunks=$2
+	file_to_split=$1
+    file_path=$(echo $file_to_split | rev | cut -d'/' -f2- | rev)
 	output_prefix=$3
-	split -n $num_of_chunks $file_to_split $output_prefix
+    echo "The number of chunks: $num_of_chunks" 
+    echo "The file to split: $file_to_split"
+    echo "Outputs are saved as: $file_path/${output_prefix}"
+	split -n $num_of_chunks $file_to_split "$file_path/${output_prefix}"
+    echo "The new files are:"
+    ls $file_path | grep "$output_prefix"
 }
 
 # the below functions are hardcoded for better understandability
 function split_file_based_on_size()
 {
-	any_file=sample_file.zip
-	max_split_file_size=50M #100K 50M 2G refer to KB, MB and GB
-	split -b $max_split_file_size $any_file "part_"
+	any_file=$1
+	max_split_file_size=$2 #100K 50M 2G refer to KB, MB and GB
+    file_path=$(echo $any_file | rev | cut -d'/' -f2- | rev)
+    output_prefix=$3
+    echo "The size of split file: $max_split_file_size" 
+    echo "The file to split: $any_file"
+    echo "Outputs are saved as: "$file_path/${output_prefix}""
+	split -b $max_split_file_size $any_file "$file_path/${output_prefix}"
+    echo "The new files are:"
+    ls $file_path | grep "$output_prefix"
 }
 
 function join_files()
 {
-	files_prefix="part_*"
-	cat $files_prefix  > sample_file_regrouped.zip
+	files_prefix=$1
+    complete_file_name=$2
+	cat $files_prefix  > $complete_file_name
 }
 ```
 
@@ -310,16 +350,18 @@ function join_files()
 # inside the recipe, there will be a if clause to direct to the right function
 # refer full recipe for details
 % manage_files --function_name arg1 arg2
-# You can also add any number of other file operations that you want to club with `manage_files`
+# You can also add any number of other file operations 
+# that you want to club with `manage_files`
 ```
 
 For **full recipe details**, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/blob/main/manage_files/manage_files.bash)
 
 ---
+
 ### II.4. Inside CSV
 
 
-`inside_csv`
+**Recipe Title: `inside_csv`**
 
 ```bash
 # `display_column_names`, `display_n_rows_in_a_column` `basic_conditional_operations`
@@ -335,8 +377,14 @@ function display_n_rows_in_a_column()
 	file_name=$1
 	column_name=$2
 	num_rows=$3
-	specific_column_number=$(head -n 1 $file_name | sed 's|,|\n|g' | nl | grep "$column_name" | grep -E "[0-9]+" -o)
-	awk -F',' -v column_number=$specific_column_number '{print $column_number}' $file_name | head -n num_rows
+	specific_column_number=$(head -n 1 $file_name | \
+    sed 's|,|\n|g' | \
+    nl | \
+    grep "$column_name" | \
+    grep -E "[0-9]+" -o)
+	awk -F',' \
+    -v column_number=$specific_column_number '{print $column_number}' \
+    $file_name | head -n num_rows
 }
 
 # the below functions are hard-coded for better understandability
@@ -346,8 +394,14 @@ function filter_a_text_column()
 	file_name="la-riots.csv"
 	column_name="gender"
     text_to_filter="Male"
-	specific_column_number=$(head -n 1 $file_name | sed 's|,|\n|g' | nl | grep "$column_name" | grep -E "[0-9]+" -o)
-	num_of_males=$(awk -F',' -v column_number=$specific_column_number '$column_number=="$text_to_filter" { print }' $file_name | wc -l)
+	specific_column_number=$(head -n 1 $file_name | \
+    sed 's|,|\n|g' | \
+    nl | \
+    grep "$column_name" | \
+    grep -E "[0-9]+" -o)
+	num_of_males=$(awk -F',' \
+    -v column_number=$specific_column_number '$column_number=="$text_to_filter" { print }' \
+    $file_name | wc -l)
 	echo "Number of males: $num_of_males"
 }
 
@@ -356,8 +410,14 @@ function filter_a_numeric_column()
 	file_name="la-riots.csv"
 	column_name="age"
     numeric_column_condition=">= 18"
-	specific_column_number=$(head -n 1 $file_name | sed 's|,|\n|g' | nl | grep "$column_name" | grep -E "[0-9]+" -o)
-	age_gt_18=$(awk -F',' -v column_number=$specific_column_number '$column_number $numeric_column_condition { print }' $file_name | wc -l)
+	specific_column_number=$(head -n 1 $file_name | \
+    sed 's|,|\n|g' | \
+    nl | \
+    grep "$column_name" | grep -E "[0-9]+" -o)
+	age_gt_18=$(awk -F',' \
+    -v column_number=$specific_column_number \
+    '$column_number $numeric_column_condition { print }' \
+    $file_name | wc -l)
 	echo "Num of ppl greater than or equal to 18: $age_gt_18"
 }
 
@@ -376,7 +436,8 @@ function filter_a_numeric_column()
 # inside the recipe, there will be a if clause to direct to the right function
 # refer full recipe for details
 % inside_csv --function_name arg1 arg2
-# You can also add any number of other file operations that you want to club with `manage_files`
+# You can also add any number of other file operations 
+# that you want to club with `manage_files`
 ```
 
 For **full recipe details**, refer [here](https://github.com/senthilkumarm1901/bash_script_recipes/blob/main/inside_csv/inside_csv.bash)
@@ -390,13 +451,16 @@ Thanks for hanging on, so far. Now let us try some  AWS specific recipes.
 
 
 
-**Manage Multiple AWS Accounts**
+Recipe Title: **Manage Multiple AWS Accounts**
 
 ```bash
 function recieve_and_verify_clipboard_contents
 {
     pbpaste > ~/.aws/credentials
-    verify=$(cat ~/.aws/credentials | head -n 2 | tail -n 1 | grep "aws_access_key_id")
+    verify=$(cat ~/.aws/credentials | \
+    head -n 2 | \
+    tail -n 1 | \
+    grep "aws_access_key_id")
     if [[ -z $verify ]] ; then
         echo "Your content below in Clipboard are not valid. \
             Please copy the correct short term credentials"
@@ -409,7 +473,9 @@ function create_aws_environment_variables()
     export REGION=$1
     # typically AWS_PROFILE is a combination like below
     # <AWS_ACCOUNT_ID>_<IAM_ROLE> 
-    export AWS_PROFILE=$(cat ~/.aws/credentials | head -n 1 | cut -c 2- | rev | cut -c 2- | rev)
+    export AWS_PROFILE=$(cat ~/.aws/credentials | \
+    head -n 1 | \
+    cut -c 2- | rev | cut -c 2- | rev)
     echo "AWS PROFILE: $AWS_PROFILE" 
     export AWS_ACCOUNT_ID=$(echo $AWS_PROFILE | awk -F'_' '{print $1}')
     aws configure set region $REGION --profile $AWS_PROFILE
@@ -420,7 +486,11 @@ function create_aws_environment_variables()
 
 - The methodology to make `manage_multiple_aws_accounts` work anywhere in terminal is slightly different than the rest of the functions
 - This because every time a shell script is run, it makes a copy of current shell and kills that shell once the shell script is executed.
-- But we want the environment variables - $AWS_PROFILE, $REGION, $AWS_ACCOUNT_ID  to persist in our current shell window
+- But we want the environment variables - `$AWS_PROFILE`, `$REGION`, `$AWS_ACCOUNT_ID`  to persist in our current shell window
+
+<br>
+<br>
+
 - Hence add the below bash function to `~/.zshrc`. 
 
 ```bash
@@ -472,7 +542,7 @@ There are two sample AWS recipes created from scratch using AWS CLI and some bas
 	- This is a Taskfile.yml. But in essence, you are executing individual bash commands
 	- Taskfile is so intuitively good. Check it out [here](https://taskfile.dev/usage/). 
 
-![](images/Taskfile_for_ec2.png)
+![](images/bash_scripting/Taskfile_for_ec2.png)
 
 2. From scratch, how to `create_a_vpc_with_private_subnet_and_nat.bash` | [link](https://github.com/senthilkumarm1901/bash_script_recipes/blob/main/aws_recipes/create_vpc_sg_privatesub_NAT.bash)
 
@@ -503,21 +573,15 @@ function a_specific_function()
 	# some simple transformation
 }
 ```
+Source: Refer [Google's Bash Scripting Style Guide](https://google.github.io/styleguide/shellguide.html#when-to-use-shell)
 
-
-Bash scripting is meant for implementation the above way. (refer [Google's Bash Scripting Style Guide](https://google.github.io/styleguide/shellguide.html#when-to-use-shell) )
 It is NOT a replacement for Python or Rust or even a [Taskfile](https://taskfile.dev/). Neither are the languages a replacement for Bash. But in combination with your core programming language, they are really powerful. 
 
 If I take some technical liberty, you did not execute bash scripting when you used `find` , `grep`, `sed` and `awk`, you actually leveraged really efficiently written C codes (source). 
+Unequivocally, it is a great skill in your toolbox.
 
+Bash scripting is foundational to Software Engineering and more pervasive than you think. If you have used `git`, `docker`, `kubectl` or even just `mkdir & cd`, you have tip-toed into bash scripting. Why not dive in?
 
-Bash scripting is foundational to Software Engineering and more pervasive than you think. If you have used `git`, `docker`, `kubectl` or even just `mkdir & cd`, you have tip-toed into bash scripting. 
-
-Unequivocally, it is a great skill in your toolbox. 
 Happy Bash Scripting !
 
-
 ---
-
-
-
