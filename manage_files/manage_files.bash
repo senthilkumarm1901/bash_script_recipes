@@ -8,9 +8,9 @@
 
 function count_files_inside_dir() 
 {
-       directory="$1"
-       num_files=$(ls -l "$directory" | grep -v "^d" | wc -l)
-       echo "Number of files in $directory: $num_files"
+    directory="$1"
+    num_files=$(ls -l "$directory" | grep -v "^d" | wc -l)
+    echo "Number of files in $directory: $num_files"
 }
 
 function backup_file() 
@@ -37,10 +37,16 @@ function get_size()
 
 function split_file_into_n_chunks()
 {
-	num_of_chunks=$1
-	file_to_split=$2
+	num_of_chunks=$2
+	file_to_split=$1
+    file_path=$(echo $file_to_split | rev | cut -d'/' -f2- | rev)
 	output_prefix=$3
-	split -n $num_of_chunks $file_to_split $output_prefix
+    echo "The number of chunks: $num_of_chunks" 
+    echo "The file to split: $file_to_split"
+    echo "Outputs are saved as: $file_path/${output_prefix}"
+	split -n $num_of_chunks $file_to_split "$file_path/${output_prefix}"
+    echo "The new files are:"
+    ls $file_path | grep "$output_prefix"
 }
 
 # the below functions are hardcoded for better understandability
@@ -48,7 +54,14 @@ function split_file_based_on_size()
 {
 	any_file=$1
 	max_split_file_size=$2 #100K 50M 2G refer to KB, MB and GB
-	split -b $max_split_file_size $any_file "part_"
+    file_path=$(echo $any_file | rev | cut -d'/' -f2- | rev)
+    output_prefix=$3
+    echo "The size of split file: $max_split_file_size" 
+    echo "The file to split: $any_file"
+    echo "Outputs are saved as: "$file_path/${output_prefix}""
+	split -b $max_split_file_size $any_file "$file_path/${output_prefix}"
+    echo "The new files are:"
+    ls $file_path | grep "$output_prefix"
 }
 
 function join_files()
@@ -61,26 +74,28 @@ function join_files()
 if [[ $# -gt 0 ]]; then
     case "$1" in
         --count_files_inside_dir)
-        count_files_inside_dir $2            
+        direcory=$(echo "$2" | sed "s| |?|g")
+        count_files_inside_dir $direcory         
             ;;
         --backup_file)
-        backup_file $2
+        file=$(echo "$2" | sed "s| |?|g")
+        backup_file "$file"
             ;;
         --get_size)
-            get_size "$2"
+        get_size "$2"
             ;;
         --split_file_into_n_chunks)
-            split_file_into_n_chunks "$2" "$3" "$4"
+        split_file_into_n_chunks "$2" $3 "$4"
             ;;            
         --split_file_based_on_size)
-            split_file_based_on_size $1 $2 
+        split_file_based_on_size "$2" $3 "$4"
             ;;
-        --join_files)
-            join_files $1 $2 
+        --join_files) 
+        join_files "$2" "$3"
             ;;
         *)
-            echo "Unknown option: $1"
-            exit 1
+        echo "Unknown option: $1"
+        exit 1
             ;;
     esac
 fi
