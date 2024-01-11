@@ -15,17 +15,6 @@ env:
 dotenv: ['.env_for_vpc_and_public_subnet_id']
 
 tasks:
-  paste_credentials_from_copied_clipboard:
-    cmds:
-      - pbpaste > ~/.aws/credentials
-    silent: false
-  
-  set_up_credentials:
-    cmds:
-      - export AWS_PROFILE=$(cat ~/.aws/credentials | head -n 1 | cut -c 2- | rev | cut -c 2- | rev)
-      - export AWS_ACCOUNT_ID=$(echo $AWS_PROFILE | awk -F'_' '{print $1}')
-      - aws configure set region $REGION --profile $AWS_PROFILE
-    silent: false
   
   1A.generate_ec2_key_pair:
     cmds:
