@@ -7,12 +7,12 @@ manage_multiple_aws_accounts --region ap-south-1
 
 
 ## Step 1A: Create a VPC
-aws ec2 create-vpc --cidr-block 10.0.0.0/16 --tag-specification ResourceType=vpc,Tags=[{Key=Name,Value=SecOpsVpc}] > create-vpc-command-output.json
+aws ec2 create-vpc --cidr-block 10.0.0.0/16 --tag-specification ResourceType=vpc,Tags=[{Key=Name,Value=SampleVpc}] > create-vpc-command-output.json
 vpc_id=$(cat create-vpc-command-output.json | jp -u 'Vpc.VpcId')
 
 ## Step 1B: If VPC is already created
 aws ec2 describe-vpcs > command_outputs/describe_vpcs.json 
-vpc_id=$(jp -f command_outputs/describe_vpcs.json -u 'join(`","`,Vpcs[?Tags[?Value==`"SecOpsVpc"`]].VpcId)')
+vpc_id=$(jp -f command_outputs/describe_vpcs.json -u 'join(`","`,Vpcs[?Tags[?Value==`"SampleVpc"`]].VpcId)')
 
 ## Step 2: Create a Public Subnet
 : '
