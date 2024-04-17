@@ -56,6 +56,8 @@ tasks:
       - aws ec2 describe-images --owners self amazon > amis_in_this_region.json
       - aws ec2 describe-instance-types --output json > instance-types.json
       - # the above command helps in identifying the right image ami_id for your need
+      - # do you want to search for Pytorch 2 and Ubuntu 20.04 images
+      - # cat amis_in_this_region.json | jp -u 'Images[?contains(ImageLocation, `"PyTorch 2."`)]' | jp -u '[?contains(ImageLocation, `"Ubuntu 20.04"`)]'
     silent: false
 
   4.create_ec2_instance:
